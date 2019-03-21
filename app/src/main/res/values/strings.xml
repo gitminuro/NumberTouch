@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">NumberTouch</string>
+    <string name="numbertouch">NumberTouch</string>
+    <string name="ExBtn_text">説明</string>
+    <string name="StartBtn_text">スタート</string>
+    <string name="TitleBtn_text">タイトルへ</string>
+</resources>
