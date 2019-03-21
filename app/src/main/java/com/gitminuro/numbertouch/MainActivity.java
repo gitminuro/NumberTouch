@@ -1,6 +1,7 @@
 package com.gitminuro.numbertouch;
 
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,13 +10,21 @@ import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
     private int[] numArray;
     private int[] sortArray;
     private int nowNum;
+
+    private Timer timer;
+    private CountUpTimerTask timerTask;
+    private Handler handler = new Handler();
+    private long count, delay, period;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +79,15 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener event = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView txtClear = (TextView) findViewById(R.id.TxtClear);
-                if(nowNum < 0 || ((Button)v).getText().toString().equals("〇")) return;
+                TextView txtClear = (TextView)findViewById(R.id.TxtClear);
+                if(nowNum < 0 || ((Button)v).getText().toString().equals("〇") || count >= 36000) return;
                 if(Integer.parseInt(((Button)v).getText().toString()) == sortArray[nowNum]) {
                     ((Button)v).setBackgroundColor(Color.rgb(135, 206, 235));
                     ((Button)v).setText("〇");
                     nowNum--;
                     if(nowNum < 0) {
                         txtClear.setVisibility(View.VISIBLE);
+                        timerStop();
                     }
                 }
                 else {
@@ -113,9 +123,13 @@ public class MainActivity extends AppCompatActivity {
         toTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timerStop();
                 setLayoutTitle();
             }
         });
+
+        timerStart();
+
     }
 
     private void setRandomNum() {
@@ -134,5 +148,51 @@ public class MainActivity extends AppCompatActivity {
         Button numBtn = (Button)findViewById(btnId);
         numBtn.setOnClickListener(ev);
         numBtn.setText(String.valueOf(numArray[renban-1]));
+    }
+
+    private void timerStart() {
+        if(timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+
+        timer = new Timer();
+        timerTask = new CountUpTimerTask();
+        delay = 0;
+        period = 100;
+        count = 0;
+        timer.schedule(timerTask, delay, period);
+        ((TextView)findViewById(R.id.TxtTimer)).setText("00:00.00");
+    }
+
+    private void timerStop() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    class CountUpTimerTask  extends TimerTask {
+        @Override
+        public void run() {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if(count < 36000) {
+                        count++;
+                        long mm = count * 100 / 1000 / 60;
+                        long ss = count * 100 / 1000 % 60;
+                        long ms = (count * 100 - ss * 1000 - mm * 1000 * 60) / 100;
+                        ((TextView) findViewById(R.id.TxtTimer)).setText(
+                                String.format(Locale.JAPAN, "%1$02d:%2$02d.%3$01d", mm, ss, ms)
+                        );
+                    }
+                    else {
+                        ((TextView) findViewById(R.id.TxtClear)).setText("失敗！");
+                        findViewById(R.id.TxtClear).setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
     }
 }
