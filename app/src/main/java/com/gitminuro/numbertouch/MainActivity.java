@@ -1,17 +1,21 @@
 package com.gitminuro.numbertouch;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     private int[] numArray;
     private int[] sortArray;
+    private int nowNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +70,23 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener event = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView txt = (TextView) findViewById(R.id.TxtTest);
-                txt.setText(((Button)v).getText());
+                TextView txtClear = (TextView) findViewById(R.id.TxtClear);
+                if(nowNum < 0 || ((Button)v).getText().toString().equals("〇")) return;
+                if(Integer.parseInt(((Button)v).getText().toString()) == sortArray[nowNum]) {
+                    ((Button)v).setBackgroundColor(Color.rgb(135, 206, 235));
+                    ((Button)v).setText("〇");
+                    nowNum--;
+                    if(nowNum < 0) {
+                        txtClear.setVisibility(View.VISIBLE);
+                    }
+                }
+                else {
+                    ((Button)v).setBackgroundColor(Color.rgb(220, 20, 60));
+                }
             }
         };
 
+        nowNum = 19;
         setRandomNum();
         setButton(event, R.id.button1, 1);
         setButton(event, R.id.button2, 2);
@@ -93,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
         setButton(event, R.id.button19, 19);
         setButton(event, R.id.button20, 20);
 
-        Button b = (Button)findViewById(R.id.title);
-        b.setOnClickListener(new View.OnClickListener() {
+        Button toTitle = (Button)findViewById(R.id.BtnEnd);
+        toTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setLayoutTitle();
@@ -104,14 +120,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void setRandomNum() {
         numArray = new int[20];
+        sortArray = new int[20];
+        int ran = 0;
         for(int i = 0; i < 20; i++) {
-            numArray[i] = new Random().nextInt(100) + 1;
+            ran = new Random().nextInt(100) + 1;
+            numArray[i] = ran;
+            sortArray[i] = ran;
         }
+        Arrays.sort(sortArray);
     }
 
     private void setButton(View.OnClickListener ev, int btnId, int renban) {
         Button numBtn = (Button)findViewById(btnId);
         numBtn.setOnClickListener(ev);
-        numBtn.setText(new Integer(numArray[renban-1]).toString());
+        numBtn.setText(String.valueOf(numArray[renban-1]));
     }
 }
