@@ -7,30 +7,32 @@
 
     <TextView
         android:id="@+id/TitleTxt"
-        android:layout_width="258dp"
+        android:layout_width="260dp"
         android:layout_height="45dp"
-        android:layout_marginTop="203dp"
+        android:layout_marginTop="200dp"
         android:text="@string/numbertouch"
         android:textAlignment="center"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/StartBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="36dp"
         android:text="@string/StartBtn_text"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TitleTxt" />
+        app:layout_constraintTop_toBottomOf="@+id/ExBtn" />
 
     <Button
         android:id="@+id/ExBtn"
-        android:layout_width="122dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
         android:text="@string/ExBtn_text"
